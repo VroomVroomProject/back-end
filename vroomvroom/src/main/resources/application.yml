@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url : jdbc:mariadb://localhost:3306/vroom?characterEncoding=UTF-8&serverTimezone=UTC
+    username :
+    password :
+
+  jpa:
+    open-in-view: true #OSIV 설정
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        diarect: org.hibernate.dialect.MariaDBDialect  # 쿼리의 기준이 되는 데이터베이스 엔진을 설정
+        format_sql: true
+        use_sql_comments: true  #Querydsl JPQL 변환될 떄  JPQL 쿼리 로그 보는 설정
+        default_batch_fetch_size: 100
+
+logging.level:
+  org.hibernate.SQL: debug
