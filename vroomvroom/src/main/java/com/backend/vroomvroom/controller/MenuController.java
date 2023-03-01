@@ -3,10 +3,7 @@ package com.backend.vroomvroom.controller;
 import com.backend.vroomvroom.dto.menu.MenuDto;
 import com.backend.vroomvroom.service.menu.IMenuService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -16,8 +13,14 @@ public class MenuController {
     private final IMenuService menuService;
 
     @PostMapping("/create")
-    public MenuDto createMenu(@RequestBody MenuDto menuDto) {
+    public MenuDto createMenu(@RequestBody MenuDto menuDto) throws Exception {
         MenuDto createMenu = menuService.createMenu(menuDto);
         return createMenu;
+    }
+
+    @GetMapping("/detail/{menuId}")
+    public MenuDto detailMenu(@PathVariable("menuId") String menuId) {
+        MenuDto detailMenu = menuService.getDetailMenu(menuId);
+        return detailMenu;
     }
 }

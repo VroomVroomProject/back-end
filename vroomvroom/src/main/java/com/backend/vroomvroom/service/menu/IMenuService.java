@@ -1,18 +1,22 @@
 package com.backend.vroomvroom.service.menu;
 
 import com.backend.vroomvroom.dto.menu.MenuDto;
-import com.backend.vroomvroom.entity.menu.MenuEntity;
 
 import java.util.List;
 
 public interface IMenuService {
-    public MenuDto createMenu(MenuDto menuDto);
+    /**
+     * menu 생성
+     * @param menuDto
+     * @return
+     */
+    public MenuDto createMenu(MenuDto menuDto) throws Exception;
 
     /**
      * menu 상세정보
      * @return
      */
-    public MenuDto getMenuDetail();
+    public MenuDto getDetailMenu(String menuId);
 
     /**
      * menu use_yn y 사용
@@ -26,8 +30,16 @@ public interface IMenuService {
      */
     public List<MenuDto> listAll();
 
+    /**
+     * menu 수정
+     * @return
+     */
     public MenuDto updateMenu();
 
+    /**
+     * menu 삭제
+     * @return
+     */
     public boolean deleteMenu();
 
 }
