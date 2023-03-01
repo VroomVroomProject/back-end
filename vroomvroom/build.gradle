@@ -55,6 +55,9 @@ dependencies {
 	//Bean Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	//springdoc-openAPI
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
