@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class MenuDto extends BaseDto implements Serializable {
+public class MenuDto extends BaseDto {
     private String menuId;
     private String menuName;
     private String menuPath;
@@ -16,7 +16,4 @@ public class MenuDto extends BaseDto implements Serializable {
     private Long groupIdx;
     private Long levelNo;
     private Long sortNo;
-    private String createUserId;
-    private String updateUserId;
-    private String useYn;
 }

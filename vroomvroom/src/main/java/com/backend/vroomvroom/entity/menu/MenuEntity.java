@@ -30,7 +30,8 @@ public class MenuEntity extends BaseEntity {
     private Long sortNo;
 
     @Builder
-    public MenuEntity(String menuId, String menuName, String menuPath, String parentId, Long groupIdx, Long levelNo, Long sortNo) {
+    public MenuEntity(String menuId, String menuName, String menuPath, String parentId, Long groupIdx, Long levelNo, Long sortNo, String useYn) {
+        super();
         this.menuId = menuId;
         this.menuName = menuName;
         this.menuPath = menuPath;
@@ -38,5 +39,6 @@ public class MenuEntity extends BaseEntity {
         this.groupIdx = groupIdx;
         this.levelNo = levelNo;
         this.sortNo = sortNo;
+        this.setUseYn(useYn);
     }
 }

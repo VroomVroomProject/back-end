@@ -34,7 +34,7 @@ public interface IMenuService {
      * menu 수정
      * @return
      */
-    public MenuDto updateMenu();
+    public MenuDto updateMenu(MenuDto menuDto);
 
     /**
      * menu 삭제
