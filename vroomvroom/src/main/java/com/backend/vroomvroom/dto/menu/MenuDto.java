@@ -16,4 +16,5 @@ public class MenuDto extends BaseDto {
     private Long groupIdx;
     private Long levelNo;
     private Long sortNo;
+    private Long changeSortNo;
 }

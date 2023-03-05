@@ -7,9 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,7 +79,12 @@ public class MenuServiceImpl implements IMenuService{
 
     @Override
     public List<MenuDto> list() {
-        return null;
+        List<MenuEntity> rs = menuRepository.findByUseYn("Y");
+        rs = rs.stream().sorted(Comparator.comparing(MenuEntity::getGroupIdx).reversed().thenComparing(MenuEntity::getSortNo))
+                .collect(Collectors.toList());
+        List<MenuDto> menuList = new ArrayList<>();
+        BeanUtils.copyProperties(rs, menuList);
+        return menuList;
     }
 
     @Override
@@ -83,17 +92,36 @@ public class MenuServiceImpl implements IMenuService{
         return null;
     }
 
+    @Transactional
     @Override
     public MenuDto updateMenu(MenuDto menuDto) {
 
         MenuEntity updateEntity = menuRepository.findById(menuDto.getMenuId()).orElse(null);
         List<MenuEntity> groupList = menuRepository.findByGroupIdx(menuDto.getGroupIdx()); //groupIdx 리스트
 
+        if(updateEntity.getMenuId().equals(menuDto.getParentId())) { //자기 자신의 부모가 아닐때
+//            if(menuDto.getSortNo() ==)
+        }
         return null;
     }
 
+    @Transactional
     @Override
-    public boolean deleteMenu() {
-        return false;
+    public boolean deleteMenu(MenuDto menuDto) {
+        boolean rs = false;
+
+        MenuEntity menuEntity = menuRepository.findById(menuDto.getMenuId()).orElse(null);
+        if(ObjectUtils.isNotEmpty(menuEntity) && menuEntity.getGroupIdx().equals(menuDto.getGroupIdx())) {
+            menuEntity.setUseYn("N");
+
+            List<MenuEntity> menuList = menuRepository.findByGroupIdx(menuDto.getGroupIdx());
+            for(MenuEntity entity : menuList) {
+                if(entity.getSortNo() > menuEntity.getSortNo()) {
+                    entity.setSortNo(entity.getSortNo() - 1);
+                }
+            }
+            rs = true;
+        }
+        return rs;
     }
 }

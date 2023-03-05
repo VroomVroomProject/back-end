@@ -41,4 +41,8 @@ public class MenuEntity extends BaseEntity {
         this.sortNo = sortNo;
         this.setUseYn(useYn);
     }
+
+    public void setSortNo(Long sortNo) {
+        this.sortNo = sortNo;
+    }
 }

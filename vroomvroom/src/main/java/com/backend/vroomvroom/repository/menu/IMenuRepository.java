@@ -13,6 +13,8 @@ public interface IMenuRepository extends JpaRepository<MenuEntity, String> {
 
     List<MenuEntity> findByGroupIdx(Long groupIdx);
 
+    List<MenuEntity> findByUseYn(String useYn);
+
     @Query(value = "update tm_menu set sort_no = sort_no + 1 where sort_no > :sortNo and group_idx = :menuNo", nativeQuery = true)
     void updateSort(@Param("menuNo") Long menuNo, @Param("sortNo") Long sortNo);
 

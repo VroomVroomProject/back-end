@@ -40,6 +40,6 @@ public interface IMenuService {
      * menu 삭제
      * @return
      */
-    public boolean deleteMenu();
+    public boolean deleteMenu(MenuDto menuDto);
 
 }
