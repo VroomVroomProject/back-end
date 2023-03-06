@@ -1,8 +1,8 @@
 package com.backend.vroomvroom.entity.menu;
 
 import com.backend.vroomvroom.entity.BaseEntity;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tm_menu")
 @Getter
+@SuperBuilder
 public class MenuEntity extends BaseEntity {
     @Id
     @Column(name = "menu_id")
@@ -29,9 +30,8 @@ public class MenuEntity extends BaseEntity {
     @Column(name = "sort_no")
     private Long sortNo;
 
-    @Builder
     public MenuEntity(String menuId, String menuName, String menuPath, String parentId, Long groupIdx, Long levelNo, Long sortNo, String useYn) {
-        super();
+        super(useYn);
         this.menuId = menuId;
         this.menuName = menuName;
         this.menuPath = menuPath;
@@ -39,7 +39,6 @@ public class MenuEntity extends BaseEntity {
         this.groupIdx = groupIdx;
         this.levelNo = levelNo;
         this.sortNo = sortNo;
-        this.setUseYn(useYn);
     }
 
     public void setSortNo(Long sortNo) {
