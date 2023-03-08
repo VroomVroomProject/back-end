@@ -1,12 +1,16 @@
 package com.backend.vroomvroom.service.board;
 
-import com.backend.vroomvroom.dto.board.PostCategoryCreateDto;
+import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
+import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
 import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -15,25 +19,23 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
 
     private final IPostCategoryRepository iPostCategoryRepository;
 
-    // TODO: 2023-03-07 createUserId -> 회원 기능 구현시에 로그인한 회원 ID로 변경할 것
     @Override
     @Transactional
-    public PostCategoryCreateDto createPostCategory(PostCategoryCreateDto postCategoryCreateDto) {
-        PostCategoryEntity savePostCategory = iPostCategoryRepository.save(PostCategoryEntity.builder()
-                .name(postCategoryCreateDto.getName())
-                .orders(postCategoryCreateDto.getOrders())
-                .adminWriteYn(postCategoryCreateDto.getAdminWriteYn())
-                .url(postCategoryCreateDto.getUrl())
-                .useYn("Y")
-                .createUserId("1").build());
+    public PostCategoryResponseDto createPostCategory(PostCategoryRequestDto postCategoryRequestDto) {
+
+        PostCategoryEntity postCategoryEntity = PostCategoryRequestDto.mapToEntity(postCategoryRequestDto);
+        PostCategoryEntity savePostCategory = iPostCategoryRepository.save(postCategoryEntity);
 
         log.info("createPostCategory result  : {}", savePostCategory);
 
-        postCategoryCreateDto.setCreateUserId(savePostCategory.getCreateUserId());
-        postCategoryCreateDto.setCreateDateTime(savePostCategory.getCreateDateTime());
-        postCategoryCreateDto.setUseYn(savePostCategory.getUseYn());
+        return PostCategoryResponseDto.mapToDto(savePostCategory);
+    }
 
+    @Override
+    @Transactional
+    public List<PostCategoryResponseDto> listPostCategory() {
+        List<PostCategoryEntity> rs = iPostCategoryRepository.findCategoryListByUseYnOrderByOrders("Y");
 
-        return postCategoryCreateDto;
+        return rs.stream().map(PostCategoryResponseDto :: mapToDto).collect(Collectors.toList());
     }
 }
