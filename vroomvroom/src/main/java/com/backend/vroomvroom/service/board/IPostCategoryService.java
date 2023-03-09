@@ -9,5 +9,5 @@ public interface IPostCategoryService {
 
     public PostCategoryResponseDto createPostCategory(PostCategoryRequestDto postCategoryRequestDto);
 
-    public List<PostCategoryResponseDto> listPostCategory();
+    public List<PostCategoryResponseDto> listPostCategory(String useYn);
 }

@@ -8,4 +8,8 @@ import java.util.List;
 public interface IPostCategoryRepository extends JpaRepository<PostCategoryEntity, Long> {
 
     List<PostCategoryEntity> findCategoryListByUseYnOrderByOrders(String useYn);
+
+    boolean existsById(Long id);
+
+    boolean existsByUrlNameOrUrl(String urlName, String url);
 }

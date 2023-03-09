@@ -22,7 +22,11 @@ public class PostCategoryEntity extends BaseEntity {
     @Column(name = "post_category_id", nullable = false)
     private Long id;
 
-    private String name;
+    @Column(name = "view_name")
+    private String viewName;
+
+    @Column(name = "url_name")
+    private String urlName;
 
     @Column(name = "admin_write_yn")
     private String adminWriteYn;
@@ -31,10 +35,11 @@ public class PostCategoryEntity extends BaseEntity {
 
     private String url;
 
-    public PostCategoryEntity(Long id, String name, String adminWriteYn, int orders, String url, String useYn) {
+    public PostCategoryEntity(Long id, String viewName, String urlName, String adminWriteYn, int orders, String url, String useYn) {
         super(useYn);
         this.id = id;
-        this.name = name;
+        this.viewName = viewName;
+        this.urlName = urlName;
         this.adminWriteYn = adminWriteYn;
         this.orders = orders;
         this.url = url;

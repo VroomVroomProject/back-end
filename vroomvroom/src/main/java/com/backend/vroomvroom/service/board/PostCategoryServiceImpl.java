@@ -22,6 +22,12 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
     @Override
     @Transactional
     public PostCategoryResponseDto createPostCategory(PostCategoryRequestDto postCategoryRequestDto) {
+        
+        //urlName 또는 url에 대한 같은 값이 이미 존재하는 경우
+        if(iPostCategoryRepository.existsByUrlNameOrUrl(postCategoryRequestDto.getUrlName(), postCategoryRequestDto.getUrl())) {
+            log.error("urlName 또는 url에 대한 값이 이미 존재합니다.");
+            throw new RuntimeException("urlName 또는 url에 대한 값이 이미 존재합니다.");
+        }
 
         PostCategoryEntity postCategoryEntity = PostCategoryRequestDto.mapToEntity(postCategoryRequestDto);
         PostCategoryEntity savePostCategory = iPostCategoryRepository.save(postCategoryEntity);
@@ -33,8 +39,8 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
 
     @Override
     @Transactional
-    public List<PostCategoryResponseDto> listPostCategory() {
-        List<PostCategoryEntity> rs = iPostCategoryRepository.findCategoryListByUseYnOrderByOrders("Y");
+    public List<PostCategoryResponseDto> listPostCategory(String useYn) {
+        List<PostCategoryEntity> rs = iPostCategoryRepository.findCategoryListByUseYnOrderByOrders(useYn);
 
         return rs.stream().map(PostCategoryResponseDto :: mapToDto).collect(Collectors.toList());
     }

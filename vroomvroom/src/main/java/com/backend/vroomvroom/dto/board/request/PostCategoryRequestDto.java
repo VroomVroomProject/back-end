@@ -17,7 +17,10 @@ public class PostCategoryRequestDto {
     private Long userId;
 
     @NotBlank
-    private String name;
+    private String viewName;
+
+    @NotBlank
+    private String urlName;
 
     @NotNull
     private int orders;
@@ -28,13 +31,17 @@ public class PostCategoryRequestDto {
     @NotNull
     private String url;
 
+    @NotNull
+    private String useYn;
+
     public static PostCategoryEntity mapToEntity(PostCategoryRequestDto postCategoryRequestDto) {
         return PostCategoryEntity.builder()
-                .name(postCategoryRequestDto.getName())
+                .viewName(postCategoryRequestDto.getViewName())
+                .urlName(postCategoryRequestDto.getUrlName())
                 .orders(postCategoryRequestDto.getOrders())
                 .adminWriteYn(postCategoryRequestDto.getAdminWriteYn())
                 .url(postCategoryRequestDto.getUrl())
-                .useYn("Y")
+                .useYn(postCategoryRequestDto.getUseYn())
                 .createUserId(postCategoryRequestDto.getUserId()).build();
     }
 }

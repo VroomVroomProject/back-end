@@ -13,16 +13,19 @@ public class PostCategoryResponseDto {
 
     private Long postCategoryId;
 
-    private String name;
+    private String viewName;
+
+    private String urlName;
 
     private int orders;
 
     private String adminWriteYn;
 
     @Builder
-    public PostCategoryResponseDto(Long postCategoryId, String name, int orders, String adminWriteYn) {
+    public PostCategoryResponseDto(Long postCategoryId, String viewName, String urlName, int orders, String adminWriteYn) {
         this.postCategoryId = postCategoryId;
-        this.name = name;
+        this.viewName = viewName;
+        this.urlName = urlName;
         this.orders = orders;
         this.adminWriteYn = adminWriteYn;
     }
@@ -30,7 +33,8 @@ public class PostCategoryResponseDto {
     public static PostCategoryResponseDto mapToDto (PostCategoryEntity postCategoryEntity) {
         return PostCategoryResponseDto.builder()
                 .postCategoryId(postCategoryEntity.getId())
-                .name(postCategoryEntity.getName())
+                .viewName(postCategoryEntity.getViewName())
+                .urlName(postCategoryEntity.getUrlName())
                 .orders(postCategoryEntity.getOrders())
                 .adminWriteYn(postCategoryEntity.getAdminWriteYn())
                 .build();
