@@ -22,11 +22,15 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
     @Override
     @Transactional
     public PostCategoryResponseDto createPostCategory(PostCategoryRequestDto postCategoryRequestDto) {
-        
-        //urlName 또는 url에 대한 같은 값이 이미 존재하는 경우
-        if(iPostCategoryRepository.existsByUrlNameOrUrl(postCategoryRequestDto.getUrlName(), postCategoryRequestDto.getUrl())) {
-            log.error("urlName 또는 url에 대한 값이 이미 존재합니다.");
-            throw new RuntimeException("urlName 또는 url에 대한 값이 이미 존재합니다.");
+
+        if(iPostCategoryRepository.existsByUrlName(postCategoryRequestDto.getUrlName())) {
+            log.error("urlName 값이 이미 존재합니다. urlName : {}", postCategoryRequestDto.getUrlName());
+            throw new RuntimeException("urlName 값이 이미 존재합니다. " + " urlName : " + postCategoryRequestDto.getUrlName());
+        }
+
+        if(iPostCategoryRepository.existsByUrl(postCategoryRequestDto.getUrl())) {
+            log.error("url 값이 이미 존재합니다. url : {}", postCategoryRequestDto.getUrl());
+            throw new RuntimeException("url 값이 이미 존재합니다. " + " url : " + postCategoryRequestDto.getUrl());
         }
 
         PostCategoryEntity postCategoryEntity = PostCategoryRequestDto.mapToEntity(postCategoryRequestDto);

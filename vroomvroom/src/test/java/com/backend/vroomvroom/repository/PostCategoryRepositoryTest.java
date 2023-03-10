@@ -40,7 +40,7 @@ public class PostCategoryRepositoryTest {
         PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
         //when
         boolean checked = postCategoryRepository.existsById(saveEntity.getId());
-        log.info("checked value : {}",checked);
+        log.info("checked value : {}", checked);
         //then
         assertThat(checked).isTrue();
     }
@@ -52,73 +52,62 @@ public class PostCategoryRepositoryTest {
         PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
         //when
         boolean checked = postCategoryRepository.existsById(-1L);
-        log.info("checked value : {}",checked);
+        log.info("checked value : {}", checked);
         //then
         assertThat(checked).isFalse();
     }
 
-    /**
-     * urlName만 동일한 경우
-     */
     @Test
-    public void existsByUrlnameOrUrl_UrlName_존재_여부_성공() {
+    public void existsByUrlname_UrlName_존재_여부_성공() {
         //given
         PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
 
         //when
-        boolean checked = postCategoryRepository.existsByUrlNameOrUrl("questions", "/abcdefg");
-        log.info("checked value : {}",checked);
+        boolean checked = postCategoryRepository.existsByUrlName("questions");
+        log.info("checked value : {}", checked);
 
         //then
         assertThat(checked).isTrue();
     }
 
-    /**
-     * url만 동일한 경우
-     */
     @Test
-    public void existsByUrlnameOrUrl_Url_존재_여부_성공() {
+    public void existsByUrlname_UrlName_존재_여부_실패() {
         //given
         PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
 
         //when
-        boolean checked = postCategoryRepository.existsByUrlNameOrUrl("abcdefg", "/test");
-        log.info("checked value : {}",checked);
-
-        //then
-        assertThat(checked).isTrue();
-    }
-
-    /**
-     * urlName과 url 둘 다 동일한 경우
-     */
-    @Test
-    public void existsByUrlnameOrUrl_존재_여부_성공() {
-        //given
-        PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
-
-        //when
-        boolean checked = postCategoryRepository.existsByUrlNameOrUrl("question", "/test");
-        log.info("checked value : {}",checked);
-
-        //then
-        assertThat(checked).isTrue();
-    }
-
-    /**
-     * urlName과 url 둘 다 다른 경우
-     */
-    @Test
-    public void existsByUrlnameOrUrl_존재_여부_실패() {
-        //given
-        PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
-
-        //when
-        boolean checked = postCategoryRepository.existsByUrlNameOrUrl("question1", "/test1");
-        log.info("checked value : {}",checked);
+        boolean checked = postCategoryRepository.existsByUrlName("questions2");
+        log.info("checked value : {}", checked);
 
         //then
         assertThat(checked).isFalse();
     }
+
+    @Test
+    public void existsByUrl_Url_존재_여부_성공() {
+        //given
+        PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
+
+        //when
+        boolean checked = postCategoryRepository.existsByUrl("/test");
+        log.info("checked value : {}", checked);
+
+        //then
+        assertThat(checked).isTrue();
+    }
+
+    @Test
+    public void existsByUrl_Url_존재_여부_실패() {
+        //given
+        PostCategoryEntity saveEntity = postCategoryRepository.save(postCategoryEntity);
+
+        //when
+        boolean checked = postCategoryRepository.existsByUrl("/test2");
+        log.info("checked value : {}", checked);
+
+        //then
+        assertThat(checked).isFalse();
+    }
+
 }
 

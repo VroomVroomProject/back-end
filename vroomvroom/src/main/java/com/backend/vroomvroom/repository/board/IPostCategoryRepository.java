@@ -11,5 +11,7 @@ public interface IPostCategoryRepository extends JpaRepository<PostCategoryEntit
 
     boolean existsById(Long id);
 
-    boolean existsByUrlNameOrUrl(String urlName, String url);
+    boolean existsByUrlName(String urlName);
+
+    boolean existsByUrl(String url);
 }
