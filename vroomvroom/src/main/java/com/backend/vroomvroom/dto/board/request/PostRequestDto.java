@@ -39,7 +39,7 @@ public class PostRequestDto {
                 .views(0)
                 .noticeYn(postRequestDto.getNoticeYn())
                 .useYn("Y")
-//                .createUserId(1L)
+                .createUserId(postRequestDto.getUserId())
                 .build();
     }
 

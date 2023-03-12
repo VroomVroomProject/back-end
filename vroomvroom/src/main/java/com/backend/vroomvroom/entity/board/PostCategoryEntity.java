@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.entity.board;
 
+import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,4 +45,13 @@ public class PostCategoryEntity extends BaseEntity {
         this.orders = orders;
         this.url = url;
     }
+
+    public void update(PostCategoryRequestDto postCategoryRequestDto) {
+        this.viewName = postCategoryRequestDto.getViewName();
+        this.urlName = postCategoryRequestDto.getUrlName();
+        this.adminWriteYn = postCategoryRequestDto.getAdminWriteYn();
+        this.orders = postCategoryRequestDto.getOrders();
+        this.url = postCategoryRequestDto.getUrl();
+    }
+
 }

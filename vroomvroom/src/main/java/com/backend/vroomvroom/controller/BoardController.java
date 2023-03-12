@@ -29,7 +29,7 @@ public class BoardController {
 
     /**
      * 게시판 카테고리 생성
-     * @param postCategoryRequestDto 이름, 순서, url 정보를 받는다.
+     * @param postCategoryRequestDto
      * @return 생성된 결과 정보를 반환
      */
     @PostMapping("/post-category")
@@ -50,6 +50,28 @@ public class BoardController {
         return postCategoryService.listPostCategory(useYn);
     }
 
+    /**
+     * 게시판 카테고리 수정
+     */
+    @PutMapping("/post-category/{postCategoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Long updatePostCategory(
+            @PathVariable("postCategoryId") Long postCategoryId,
+            @Valid @RequestBody PostCategoryRequestDto postCategoryRequestDto
+    ) {
+        log.info("postCategory updateById, postCategoryId : {}", postCategoryId);
+        return postCategoryService.updatePostCategory(postCategoryId, postCategoryRequestDto);
+    }
+
+    /**
+     * 게시판 카테고리 삭제
+     */
+    @DeleteMapping("/post-category/{postCategoryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePostCategory(@PathVariable("postCategoryId") Long postCategoryId) {
+        log.info("postCategory deleteById, postCategoryId : {}", postCategoryId);
+        postCategoryService.deletePostCategory(postCategoryId);
+    }
 
     /**
      * 게시물 작성
