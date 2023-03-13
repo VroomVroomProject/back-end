@@ -116,5 +116,58 @@ public class PostServiceImpl implements IPostService {
 
         return booleanBuilder;
     }
-    
+
+    @Override
+    @Transactional
+    public PostResponseDto getPostDetail(String urlName, Long postId) {
+
+        if(!iPostCategoryRepository.existsByUrlName(urlName)) {
+            log.error("urlName과 일치하는 게시판이 존재하지 않습니다. : {}", urlName);
+            throw new RuntimeException("urlName과 일치하는 게시판이 존재하지 않습니다. " + " urlName : " + urlName);
+        }
+
+        PostEntity findPostEntity = iPostRepository.findById(postId).orElseThrow(() -> {
+            log.error("postId가 존재하지 않습니다. postId : {}", postId);
+            throw new RuntimeException("can`t find a post by postId : " + postId);
+        });
+
+        if(findPostEntity.getUseYn().equals("N")) {
+            log.error("삭제된 게시물은 조회할 수 없습니다. postId : {}", postId);
+            throw new RuntimeException("삭제된 게시물은 조회할 수 없습니다. postId : " + postId);
+        }
+
+        return PostResponseDto.mapToDto(findPostEntity);
+    }
+
+    @Override
+    @Transactional
+    public Long updatePost(Long postId, PostRequestDto postRequestDto) {
+
+        PostCategoryEntity findPostCategory = iPostCategoryRepository.findById(postRequestDto.getPostCategoryId()).orElseThrow(() -> {
+            log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postRequestDto.getPostCategoryId());
+            throw new RuntimeException("can`t find a postCategoryId by " + " postCategoryId " + postRequestDto.getPostCategoryId());
+        });
+
+
+        PostEntity findPost = iPostRepository.findById(postId).orElseThrow(() -> {
+            log.error("postId가 존재하지 않습니다. postId : {}", postId);
+            throw new RuntimeException("can`t find a postId by " + " postId " + postId);
+        });
+
+        findPost.update(postRequestDto, findPostCategory);
+
+        return findPost.getId();
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long postId) {
+        PostEntity findPost = iPostRepository.findById(postId).orElseThrow(() -> {
+            log.error("postId가 존재하지 않습니다. postId : {}", postId);
+            throw new RuntimeException("can`t find a postId by " + " postId " + postId);
+        });
+
+        findPost.delete();
+    }
+
 }

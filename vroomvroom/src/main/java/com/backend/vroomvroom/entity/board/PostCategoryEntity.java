@@ -52,6 +52,7 @@ public class PostCategoryEntity extends BaseEntity {
         this.adminWriteYn = postCategoryRequestDto.getAdminWriteYn();
         this.orders = postCategoryRequestDto.getOrders();
         this.url = postCategoryRequestDto.getUrl();
+        // TODO: 2023-03-13 user 기능 구현 후에 update 시 updateUserId 세팅
     }
 
 }

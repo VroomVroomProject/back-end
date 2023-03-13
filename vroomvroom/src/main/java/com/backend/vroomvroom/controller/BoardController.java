@@ -87,6 +87,9 @@ public class BoardController {
         return postService.postRegister(postRequestDto);
     }
 
+    /**
+     * 게시물 페이징 조회
+     */
     @GetMapping("/post/{urlName}")
     @ResponseStatus(HttpStatus.OK)
     public PostPageResponse getAllPage(
@@ -97,6 +100,41 @@ public class BoardController {
             ) {
         log.info("post getAllPage type : {}, keyword : {}", type, keyword);
         return postService.getPostAll(pageable, urlName, type, keyword);
+    }
+
+    /**
+     * 게시물 상세보기
+     */
+    @GetMapping("/post/{urlName}/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponseDto getPostDetail(
+            @PathVariable("urlName") String urlName,
+            @PathVariable("postId") Long postId
+    ) {
+        return postService.getPostDetail(urlName, postId);
+    }
+
+    /**
+     * 게시물 수정
+     */
+    @PutMapping("/post/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Long updatePost(
+            @PathVariable("postId") Long postId,
+            @RequestBody PostRequestDto postRequestDto
+    ) {
+        log.info("post updateById, postId : {}", postId);
+        return postService.updatePost(postId, postRequestDto);
+    }
+
+    /**
+     * 게시물 삭제
+     */
+    @DeleteMapping("/post/{postId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePost(@PathVariable("postId") Long postId) {
+        log.info("post deleteById, postId : {}", postId);
+        postService.deletePost(postId);
     }
 
 

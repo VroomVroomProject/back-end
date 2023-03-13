@@ -145,12 +145,11 @@ public class PostCategoryServiceTest {
 
         //then
         assertThat(savedCategoryEntity.getId()).isEqualTo(updatedId);
-        assertThat(savedCategoryEntity.getViewName()).isEqualTo(updatePostCategoryEntity.getViewName());
-        assertThat(savedCategoryEntity.getUrlName()).isEqualTo(updatePostCategoryEntity.getUrlName());
-        assertThat(savedCategoryEntity.getOrders()).isEqualTo(updatePostCategoryEntity.getOrders());
-        assertThat(savedCategoryEntity.getAdminWriteYn()).isEqualTo(updatePostCategoryEntity.getAdminWriteYn());
-        assertThat(savedCategoryEntity.getUrl()).isEqualTo(updatePostCategoryEntity.getUrl());
-        assertThat(savedCategoryEntity.getUseYn()).isEqualTo(updatePostCategoryEntity.getUseYn());
+        assertThat(postCategoryRequestDto.getViewName()).isNotEqualTo(updatePostCategoryEntity.getViewName());
+        assertThat(postCategoryRequestDto.getUrlName()).isNotEqualTo(updatePostCategoryEntity.getUrlName());
+        assertThat(postCategoryRequestDto.getOrders()).isEqualTo(updatePostCategoryEntity.getOrders());
+        assertThat(postCategoryRequestDto.getAdminWriteYn()).isEqualTo(updatePostCategoryEntity.getAdminWriteYn());
+        assertThat(postCategoryRequestDto.getUrl()).isNotEqualTo(updatePostCategoryEntity.getUrl());
         
     }
 

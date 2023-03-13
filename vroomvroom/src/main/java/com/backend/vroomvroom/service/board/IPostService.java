@@ -12,4 +12,9 @@ public interface IPostService {
 
     public PostPageResponse getPostAll(Pageable pageable, String urlName, String type, String keyword);
 
+    public PostResponseDto getPostDetail(String urlName, Long postId);
+
+    public Long updatePost(Long postId, PostRequestDto postRequestDto);
+
+    public void deletePost(Long postId);
 }

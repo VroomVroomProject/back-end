@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.entity.board;
 
+import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -51,6 +52,15 @@ public class PostEntity extends BaseEntity {
         this.views = views;
         this.commentCount = commentCount;
         this.noticeYn = noticeYn;
+    }
+
+
+    public void update(PostRequestDto postRequestDto, PostCategoryEntity postCategory) {
+        this.postCategory = postCategory;
+        this.title = postRequestDto.getTitle();
+        this.contents = postRequestDto.getContents();
+        this.noticeYn = postRequestDto.getNoticeYn();
+        // TODO: 2023-03-13 user 기능 구현 후에 update 시 updateUserId 세팅
     }
 }
 
