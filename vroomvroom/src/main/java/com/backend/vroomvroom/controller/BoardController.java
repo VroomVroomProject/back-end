@@ -121,7 +121,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public Long updatePost(
             @PathVariable("postId") Long postId,
-            @RequestBody PostRequestDto postRequestDto
+            @Valid @RequestBody PostRequestDto postRequestDto
     ) {
         log.info("post updateById, postId : {}", postId);
         return postService.updatePost(postId, postRequestDto);
