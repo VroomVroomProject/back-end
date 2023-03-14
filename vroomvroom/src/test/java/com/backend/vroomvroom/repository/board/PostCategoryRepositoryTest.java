@@ -1,7 +1,6 @@
-package com.backend.vroomvroom.repository;
+package com.backend.vroomvroom.repository.board;
 
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
-import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

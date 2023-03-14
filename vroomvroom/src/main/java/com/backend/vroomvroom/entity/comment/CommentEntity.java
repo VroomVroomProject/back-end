@@ -1,6 +1,8 @@
-package com.backend.vroomvroom.entity.board;
+package com.backend.vroomvroom.entity.comment;
 
+import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
 import com.backend.vroomvroom.entity.BaseEntity;
+import com.backend.vroomvroom.entity.board.PostEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,5 +39,10 @@ public class CommentEntity extends BaseEntity {
         this.id = id;
         this.post = post;
         this.contents = contents;
+    }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.contents = commentRequestDto.getContents();
+        // TODO: 2023-03-14 user 기능 구현 후에 update 시 updateUserId 세팅
     }
 }
