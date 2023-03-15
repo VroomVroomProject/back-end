@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/vroom")
+@RequestMapping("/vroom/board")
 public class CommentController {
 
     private final ICommentService commentService;
@@ -28,7 +28,7 @@ public class CommentController {
         return commentService.commentRegister(commentRequestDto);
     }
 
-    @GetMapping("/comment/{postId}")
+    @GetMapping("/post/{postId}/comment")
     @ResponseStatus(HttpStatus.OK)
     public List<CommentResponseDto> getCommentAll(@PathVariable("postId") Long postId) {
         return commentService.getCommentAll(postId);
