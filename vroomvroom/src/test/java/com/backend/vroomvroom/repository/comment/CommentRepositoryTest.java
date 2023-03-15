@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class CommentRepositoryTest {
     private PostEntity savePost;
 
     @BeforeEach
+    @Rollback(value = false)
     public void setup() {
         PostCategoryRequestDto postCategoryRequestDto = new PostCategoryRequestDto();
         postCategoryRequestDto.setViewName("전체");
@@ -82,5 +84,33 @@ public class CommentRepositoryTest {
 
         //then
         assertThat(commentList.size()).isEqualTo(3);
+    }
+
+    @Test
+    @Rollback(value = false)
+    public void bulkUseYnSetting_댓글_일괄_삭제_테스트() {
+        //given
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setUserId(1L);
+        commentRequestDto.setPostId(savePost.getId());
+        commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
+
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+
+        commentRequestDto.setUserId(1L);
+        commentRequestDto.setPostId(savePost.getId());
+        commentRequestDto.setContents("댓글 입니다2222");
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+
+        commentRequestDto.setUserId(1L);
+        commentRequestDto.setPostId(savePost.getId());
+        commentRequestDto.setContents("댓글 입니다3333");
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+
+        //when
+        int bulkCount = iCommentRepository.bulkUseYnSetting("N", savePost.getId());
+
+        //then
+        assertThat(bulkCount).isEqualTo(3);
     }
 }

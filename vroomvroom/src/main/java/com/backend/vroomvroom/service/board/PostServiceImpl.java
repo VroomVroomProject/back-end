@@ -8,6 +8,7 @@ import com.backend.vroomvroom.entity.board.PostEntity;
 import com.backend.vroomvroom.entity.board.QPostEntity;
 import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import com.backend.vroomvroom.repository.board.IPostRepository;
+import com.backend.vroomvroom.repository.comment.ICommentRepository;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class PostServiceImpl implements IPostService {
 
     private final IPostRepository iPostRepository;
     private final IPostCategoryRepository iPostCategoryRepository;
+    private final ICommentRepository iCommentRepository;
 
     @Override
     @Transactional
@@ -168,6 +170,7 @@ public class PostServiceImpl implements IPostService {
         });
 
         findPost.delete();
+        iCommentRepository.bulkUseYnSetting("N", findPost.getId());
     }
 
 }
