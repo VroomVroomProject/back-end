@@ -1,7 +1,10 @@
 package com.backend.vroomvroom.entity.menu;
 
 import com.backend.vroomvroom.entity.BaseEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
@@ -13,6 +16,8 @@ import javax.persistence.Table;
 @Table(name = "tm_menu")
 @Getter
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuEntity extends BaseEntity {
     @Id
     @Column(name = "menu_id")
