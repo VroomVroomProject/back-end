@@ -147,7 +147,7 @@ public class MenuServiceImpl implements IMenuService{
         MenuEntity menuEntity = menuRepository.findById(menuId).orElse(null);
         // && menuEntity.getGroupIdx().equals(menuDto.getGroupIdx())
         if(ObjectUtils.isNotEmpty(menuEntity)) {
-            menuEntity.delete("N");
+            menuEntity.delete();
 
             List<MenuEntity> menuList = menuRepository.findByGroupIdxList(menuEntity.getGroupIdx());
             for(MenuEntity entity : menuList) {

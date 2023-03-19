@@ -1,9 +1,6 @@
 package com.backend.vroomvroom.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @SuperBuilder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity {
     @Column(name = "crt_user_id")
