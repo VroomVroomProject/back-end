@@ -35,4 +35,8 @@ public abstract class BaseEntity {
     public BaseEntity(String useYn) {
         this.useYn = useYn;
     }
+
+    public void delete(String useYn) {
+        this.useYn = useYn;
+    }
 }

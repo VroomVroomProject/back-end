@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url : jdbc:mariadb://localhost:3306/vroom?characterEncoding=UTF-8&serverTimezone=UTC
-    username : root
-    password : 1234
+    username :
+    password :
 
   jpa:
     open-in-view: true #OSIV 설정

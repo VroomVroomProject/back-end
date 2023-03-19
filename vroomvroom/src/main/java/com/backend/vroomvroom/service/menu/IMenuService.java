@@ -43,6 +43,6 @@ public interface IMenuService {
      * menu 삭제
      * @return
      */
-    public boolean deleteMenu(MenuDto menuDto);
+    public boolean deleteMenu(String menuId);
 
 }

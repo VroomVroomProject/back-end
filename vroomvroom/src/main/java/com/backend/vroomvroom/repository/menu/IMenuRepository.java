@@ -13,7 +13,10 @@ import java.util.List;
 public interface IMenuRepository extends JpaRepository<MenuEntity, String> {
     MenuEntity findByMenuId(String menuId);
 
-    List<MenuEntity> findByGroupIdx(Long groupIdx);
+    @Query(value = "select menu_id, crt_dt, crt_user_id, updt_dt, updt_user_id, use_yn, group_idx, level_no, menu_nm, menu_path, parent_id, sort_no from tm_menu where group_idx = :groupIdx", nativeQuery = true)
+    List<MenuEntity> findByGroupIdxList(@Param("groupIdx") Long groupIdx);
+
+    MenuEntity findByGroupIdx(Long groupIdx);
 
     List<MenuEntity> findByUseYn(String useYn);
 
@@ -25,5 +28,5 @@ public interface IMenuRepository extends JpaRepository<MenuEntity, String> {
     Long maxGroupIdx();
 
     @Query(value = "select menu_id from tm_menu where parent_id = :menuId and use_yn = 'Y'", nativeQuery = true)
-    List<MenuEntity> findParentListByMenuId(@Param("menuId") String menuId);
+    List<String> findParentListByMenuId(@Param("menuId") String menuId);
 }

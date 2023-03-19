@@ -23,9 +23,13 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl implements IMenuService{
     private final IMenuRepository menuRepository;
 
+    @Transactional
     @Override
     public MenuDto createMenu(CreateMenuDto createMenuDto) throws Exception {
         MenuEntity menuEntity = menuRepository.findById(createMenuDto.getMenuId()).orElse(null);
+
+        if(menuEntity != null) return null;
+
         if (ObjectUtils.isEmpty(menuEntity)) {
             Long level = 1L;
             Long sort = 0L;
@@ -43,8 +47,9 @@ public class MenuServiceImpl implements IMenuService{
                         .build();
             }else{
                 MenuEntity parentMenu = menuRepository.findByMenuId(createMenuDto.getParentId()); //선택값의 부모
-                List<MenuEntity> rootMenuList = menuRepository.findByGroupIdx(createMenuDto.getGroupIdx());
-                MenuEntity rootMenu = rootMenuList.stream().filter(x -> x.getSortNo() == 0).collect(Collectors.toList()).get(0);
+//                MenuEntity rootMenu = menuRepository.findByGroupIdx(createMenuDto.getGroupIdx());
+//                List<MenuEntity> rootMenuList = menuRepository.findByGroupIdx(createMenuDto.getGroupIdx());
+//                MenuEntity rootMenu = rootMenuList.stream().filter(x -> x.getSortNo() == 0).collect(Collectors.toList()).get(0);
 //                MenuEntity rootMenu = menuRepository.findByGroupIdx(menuDto.getGroupIdx()); //선택값의 루트부모
 
                 Long selectLevel = parentMenu.getLevelNo();
@@ -57,7 +62,7 @@ public class MenuServiceImpl implements IMenuService{
                         .menuPath(createMenuDto.getMenuPath())
                         .parentId(createMenuDto.getParentId())
                         .useYn("Y")
-                        .groupIdx(rootMenu.getGroupIdx())
+                        .groupIdx(parentMenu.getGroupIdx()) //여기서 에러남
                         .levelNo(++selectLevel)
                         .sortNo(++selectSort)
                         .build();
@@ -93,8 +98,8 @@ public class MenuServiceImpl implements IMenuService{
     public MenuDto updateMenu(UpdateMenuDto updateMenuDto) {
 
         MenuEntity updateEntity = menuRepository.findById(updateMenuDto.getMenuId()).orElse(null);
-        List<MenuEntity> groupList = menuRepository.findByGroupIdx(updateMenuDto.getGroupIdx()); //groupIdx 리스트
-        List<MenuEntity> childList = menuRepository.findParentListByMenuId(updateMenuDto.getMenuId());
+        List<MenuEntity> groupList = menuRepository.findByGroupIdxList(updateMenuDto.getGroupIdx()); //groupIdx 리스트
+        List<String> childList = menuRepository.findParentListByMenuId(updateMenuDto.getMenuId());
         int menuChildSize = childList.size() == 0 ? 0 : childList.size(); //자식이 있는 리스트일 경우 자식 + 1 본인 포함 else 0 + 1
 
         if(!updateEntity.getMenuId().equals(updateMenuDto.getParentId())) { //자기 자신의 부모가 아닐때
@@ -121,28 +126,30 @@ public class MenuServiceImpl implements IMenuService{
             }
         }
 
-        MenuEntity menuEntity = MenuEntity.builder()
-                .menuName(updateMenuDto.getMenuName())
-                .menuPath(updateMenuDto.getMenuPath())
-                .parentId(updateMenuDto.getParentId())
-                .levelNo(updateMenuDto.getLevelNo())
-                .sortNo(updateMenuDto.getSortNo())
-                .groupIdx(updateMenuDto.getGroupIdx())
-                        .build();
+//        updateEntity = MenuEntity.builder()
+//                .menuName(updateMenuDto.getMenuName())
+//                .menuPath(updateMenuDto.getMenuPath())
+//                .parentId(updateMenuDto.getParentId())
+//                .levelNo(updateMenuDto.getLevelNo())
+//                .sortNo(updateMenuDto.getSortNo())
+//                .groupIdx(updateMenuDto.getGroupIdx())
+//                        .build();
 
-        return MenuDto.mapToDto(menuEntity);
+        updateEntity.updateMenu(updateMenuDto.getMenuName(), updateMenuDto.getMenuPath(), updateMenuDto.getParentId(), updateMenuDto.getGroupIdx());
+        return MenuDto.mapToDto(updateEntity);
     }
 
     @Transactional
     @Override
-    public boolean deleteMenu(MenuDto menuDto) {
+    public boolean deleteMenu(String menuId) {
         boolean rs = false;
 
-        MenuEntity menuEntity = menuRepository.findById(menuDto.getMenuId()).orElse(null);
-        if(ObjectUtils.isNotEmpty(menuEntity) && menuEntity.getGroupIdx().equals(menuDto.getGroupIdx())) {
-//            menuEntity.setUseYn("N");
+        MenuEntity menuEntity = menuRepository.findById(menuId).orElse(null);
+        // && menuEntity.getGroupIdx().equals(menuDto.getGroupIdx())
+        if(ObjectUtils.isNotEmpty(menuEntity)) {
+            menuEntity.delete("N");
 
-            List<MenuEntity> menuList = menuRepository.findByGroupIdx(menuDto.getGroupIdx());
+            List<MenuEntity> menuList = menuRepository.findByGroupIdxList(menuEntity.getGroupIdx());
             for(MenuEntity entity : menuList) {
                 if(entity.getSortNo() > menuEntity.getSortNo()) {
                     entity.setSortNo(entity.getSortNo() - 1);
