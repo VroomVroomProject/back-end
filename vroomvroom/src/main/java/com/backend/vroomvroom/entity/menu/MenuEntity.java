@@ -2,7 +2,6 @@ package com.backend.vroomvroom.entity.menu;
 
 import com.backend.vroomvroom.entity.BaseEntity;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +15,6 @@ import javax.persistence.Table;
 @Table(name = "tm_menu")
 @Getter
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuEntity extends BaseEntity {
     @Id
@@ -45,16 +43,4 @@ public class MenuEntity extends BaseEntity {
         this.levelNo = levelNo;
         this.sortNo = sortNo;
     }
-
-    public void setSortNo(Long sortNo) {
-        this.sortNo = sortNo;
-    }
-
-    public void updateMenu(String menuName, String menuPath, String parentId, Long groupIdx) {
-        this.menuName = menuName;
-        this.menuPath = menuPath;
-        this.parentId = parentId;
-        this.groupIdx = groupIdx;
-    }
-
 }
