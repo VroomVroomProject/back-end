@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.board;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostPageResponse;
 import com.backend.vroomvroom.dto.board.response.PostResponseDto;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import static com.backend.vroomvroom.common.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -41,7 +44,7 @@ public class PostServiceImpl implements IPostService {
         PostCategoryEntity findPostCategory = iPostCategoryRepository.findById(postRequestDto.getPostCategoryId())
                 .orElseThrow(() -> {
                     log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postRequestDto.getPostCategoryId());
-                    throw new RuntimeException("can`t find a postCategoryId by " + " postCategoryId " + postRequestDto.getPostCategoryId());
+                    throw new CommonException(NOT_FOUND_ENTITY, "게시판 카테고리를 찾을 수 없습니다. id : " + postRequestDto.getPostCategoryId());
                 });
 
         PostEntity postEntity = PostRequestDto.mapToEntity(postRequestDto, findPostCategory);
@@ -57,7 +60,7 @@ public class PostServiceImpl implements IPostService {
 
         if(!iPostCategoryRepository.existsByUrlName(urlName)) {
             log.error("urlName 값과 일치하는 게시판이 존재하지 않습니다. urlName : {}", urlName);
-            throw new RuntimeException("can`t find a urlName by " + " urlName : " + urlName);
+            throw new CommonException(DUPLICATED_ENTITY, "urlName과 일치하는 게시판 카테고리를 찾을 수 없습니다. urlName : " + urlName);
         }
 //        BooleanBuilder booleanBuilder = getPostCondition(urlName);
         BooleanBuilder booleanBuilder1 = new BooleanBuilder().and(getPostCondition(urlName)).and(getSearchCondition(type, keyword));
@@ -125,17 +128,17 @@ public class PostServiceImpl implements IPostService {
 
         if(!iPostCategoryRepository.existsByUrlName(urlName)) {
             log.error("urlName과 일치하는 게시판이 존재하지 않습니다. : {}", urlName);
-            throw new RuntimeException("urlName과 일치하는 게시판이 존재하지 않습니다. " + " urlName : " + urlName);
+            throw new CommonException(DUPLICATED_ENTITY, "urlName과 일치하는 게시판 카테고리를 찾을 수 없습니다. urlName : " + urlName);
         }
 
         PostEntity findPostEntity = iPostRepository.findById(postId).orElseThrow(() -> {
             log.error("postId가 존재하지 않습니다. postId : {}", postId);
-            throw new RuntimeException("can`t find a post by postId : " + postId);
+            throw new CommonException(NOT_FOUND_ENTITY, "게시물을 찾을 수 없습니다. postId : " + postId);
         });
 
         if(findPostEntity.getUseYn().equals("N")) {
             log.error("삭제된 게시물은 조회할 수 없습니다. postId : {}", postId);
-            throw new RuntimeException("삭제된 게시물은 조회할 수 없습니다. postId : " + postId);
+            throw new CommonException(NOT_FOUND_ENTITY, "삭제된 게시물은 조회할 수 없습니다. postId : " + postId);
         }
 
         return PostResponseDto.mapToDto(findPostEntity);
@@ -147,13 +150,13 @@ public class PostServiceImpl implements IPostService {
 
         PostCategoryEntity findPostCategory = iPostCategoryRepository.findById(postRequestDto.getPostCategoryId()).orElseThrow(() -> {
             log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postRequestDto.getPostCategoryId());
-            throw new RuntimeException("can`t find a postCategoryId by " + " postCategoryId " + postRequestDto.getPostCategoryId());
+            throw new CommonException(NOT_FOUND_ENTITY, "게시판 카테고리를 찾을 수 없습니다. id : " + postRequestDto.getPostCategoryId());
         });
 
 
         PostEntity findPost = iPostRepository.findById(postId).orElseThrow(() -> {
             log.error("postId가 존재하지 않습니다. postId : {}", postId);
-            throw new RuntimeException("can`t find a postId by " + " postId " + postId);
+            throw new CommonException(NOT_FOUND_ENTITY, "게시물을 찾을 수 없습니다. postId : " + postId);
         });
 
         findPost.update(postRequestDto, findPostCategory);
@@ -166,7 +169,7 @@ public class PostServiceImpl implements IPostService {
     public void deletePost(Long postId) {
         PostEntity findPost = iPostRepository.findById(postId).orElseThrow(() -> {
             log.error("postId가 존재하지 않습니다. postId : {}", postId);
-            throw new RuntimeException("can`t find a postId by " + " postId " + postId);
+            throw new CommonException(NOT_FOUND_ENTITY, "게시물을 찾을 수 없습니다. postId : " + postId);
         });
 
         findPost.delete();

@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.board;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
@@ -66,7 +67,7 @@ public class PostCategoryServiceTest {
         postCategoryRequestDto.setUseYn("Y");
 
         assertThatThrownBy(() -> iPostCategoryService.createPostCategory(postCategoryRequestDto))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
         postCategoryRequestDto.setViewName("지식");
         postCategoryRequestDto.setUrlName("questions1");
@@ -76,7 +77,7 @@ public class PostCategoryServiceTest {
         postCategoryRequestDto.setUseYn("Y");
 
         assertThatThrownBy(() -> iPostCategoryService.createPostCategory(postCategoryRequestDto))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
     }
 
     @Test
@@ -196,17 +197,17 @@ public class PostCategoryServiceTest {
         //동일한 urlName으로 수정하는 경우 예외 반환
         assertThatThrownBy(() ->
             iPostCategoryService.updatePostCategory(savedCategoryEntity.getId(), updateEqualUrlNameDto)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
         //동일한 url로 수정하는 경우 예외 반환
         assertThatThrownBy(() ->
                 iPostCategoryService.updatePostCategory(savedCategoryEntity.getId(), updateEqualUrlDto)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
         //존재하지 않는 postCategoryId로 수정하는 경우 예외 반환
         assertThatThrownBy(() ->
                 iPostCategoryService.updatePostCategory(-1L, updateNotExistsIdDto)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
     }
 
@@ -245,7 +246,7 @@ public class PostCategoryServiceTest {
         //when
         assertThatThrownBy(() ->
                 iPostCategoryService.deletePostCategory(-1L)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
     }
 

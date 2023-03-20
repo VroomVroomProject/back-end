@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.comment;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
 import com.backend.vroomvroom.dto.comment.response.CommentResponseDto;
 import com.backend.vroomvroom.entity.board.PostEntity;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.backend.vroomvroom.common.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -36,7 +39,7 @@ public class CommentServiceImpl implements ICommentService {
         PostEntity findPost = iPostRepository.findById(commentRequestDto.getPostId())
                 .orElseThrow(() -> {
                     log.error("postId가 존재하지 않습니다. postId : {}", commentRequestDto.getPostId());
-                    throw new RuntimeException("can`t find a post by " + " postId " + commentRequestDto.getPostId());
+                    throw new CommonException(NOT_FOUND_ENTITY, "게시물을 찾을 수 없습니다. postId : " + commentRequestDto.getPostId());
                 });
 
         CommentEntity comment = CommentRequestDto.mapToEntity(commentRequestDto, findPost);
@@ -57,7 +60,7 @@ public class CommentServiceImpl implements ICommentService {
         PostEntity findPost = iPostRepository.findById(postId)
                 .orElseThrow(() -> {
                     log.error("postId가 존재하지 않습니다. postId : {}", postId);
-                    throw new RuntimeException("can`t find a post by " + " postId " + postId);
+                    throw new CommonException(NOT_FOUND_ENTITY, "게시물을 찾을 수 없습니다. postId : " + postId);
                 });
 
         List<CommentEntity> commentList = iCommentRepository.findByPostAndUseYnOrderByCreateDateTime(findPost, "Y");
@@ -74,13 +77,13 @@ public class CommentServiceImpl implements ICommentService {
         CommentEntity findComment = iCommentRepository.findById(commentId)
                 .orElseThrow(() -> {
                     log.error("commentId 존재하지 않습니다. commentId : {}", commentId);
-                    throw new RuntimeException("can`t find a post by " + " commentId " + commentId);
+                    throw new CommonException(NOT_FOUND_ENTITY, "댓글을 찾을 수 없습니다. commentId : " + commentId);
                 });
 
 
         if(!(findComment.getPost().getId() == commentRequestDto.getPostId())) {
             log.error("등록되어 있는 댓글의 게시물 아이디와 수정하고자 하는 댓글의 게시물 아이디가 일치하지 않습니다. postId : {}", commentRequestDto.getPostId());
-            throw new RuntimeException("등록되어 있는 댓글의 게시물 아이디와 수정하고자 하는 댓글의 게시물 아이디가 일치하지 않습니다. " + " postId " + commentRequestDto.getPostId());
+            throw new CommonException(INVALID_REQUEST, "등록되어 있는 댓글의 게시물 아이디와 수정하고자 하는 댓글의 게시물 아이디가 일치하지 않습니다. " + " postId " + commentRequestDto.getPostId());
         }
 
         findComment.update(commentRequestDto);
@@ -94,7 +97,7 @@ public class CommentServiceImpl implements ICommentService {
         CommentEntity findComment = iCommentRepository.findById(commentId)
                 .orElseThrow(() -> {
                     log.error("commentId 존재하지 않습니다. commentId : {}", commentId);
-                    throw new RuntimeException("can`t find a post by " + " commentId " + commentId);
+                    throw new CommonException(NOT_FOUND_ENTITY, "댓글을 찾을 수 없습니다. commentId : " + commentId);
                 });
 
         findComment.delete();

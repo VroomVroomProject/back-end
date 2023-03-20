@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.board;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.backend.vroomvroom.common.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -53,7 +56,7 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
         PostCategoryEntity findCategoryEntity = iPostCategoryRepository.findById(postCategoryId)
                 .orElseThrow(() -> {
                     log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postCategoryId);
-                    throw new RuntimeException("can`t find a postCategoryId by " + " postCategoryId " + postCategoryId);
+                    throw new CommonException(NOT_FOUND_ENTITY, "게시판 카테고리를 찾을 수 없습니다. postCategoryId : " + postCategoryId);
                 });
 
         findCategoryEntity.update(postCategoryRequestDto);
@@ -68,7 +71,7 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
         PostCategoryEntity findCategoryEntity = iPostCategoryRepository.findById(postCategoryId)
                 .orElseThrow(() -> {
                     log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postCategoryId);
-                    throw new RuntimeException("can`t find a postCategoryId by " + " postCategoryId " + postCategoryId);
+                    throw new CommonException(NOT_FOUND_ENTITY, "게시판 카테고리를 찾을 수 없습니다. postCategoryId : " + postCategoryId);
                 });
 
         findCategoryEntity.delete();
@@ -79,12 +82,12 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
 
         if(iPostCategoryRepository.existsByUrlName(urlName)) {
             log.error("urlName 값이 이미 존재합니다. urlName : {}", urlName);
-            throw new RuntimeException("urlName 값이 이미 존재합니다. " + " urlName : " + urlName);
+            throw new CommonException(DUPLICATED_ENTITY, "동일한 urlName 값이 존재합니다. urlName : " + urlName);
         }
 
         if(iPostCategoryRepository.existsByUrl(url)) {
             log.error("url 값이 이미 존재합니다. url : {}", url);
-            throw new RuntimeException("url 값이 이미 존재합니다. " + " url : " + url);
+            throw new CommonException(DUPLICATED_ENTITY, "동일한 url 값이 존재합니다. url : " + url);
         }
     }
 }

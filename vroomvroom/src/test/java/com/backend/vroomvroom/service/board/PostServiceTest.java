@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.board;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
@@ -112,7 +113,7 @@ public class PostServiceTest {
 
         //when
         assertThatThrownBy(() -> iPostService.postRegister(postRequestDto))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
     }
 
@@ -263,7 +264,7 @@ public class PostServiceTest {
 
         //when
         assertThatThrownBy(() -> iPostService.getPostDetail(questionCategory.getUrlName(), -1L))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
     }
 
@@ -283,7 +284,7 @@ public class PostServiceTest {
 
         //when
         assertThatThrownBy(() -> iPostService.getPostDetail(questionCategory.getUrlName() + "XXX",  savePost.getId()))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
     }
 
@@ -340,7 +341,7 @@ public class PostServiceTest {
         postUpdate.setNoticeYn("N"); //공지사항 게시물 여부
 
         assertThatThrownBy(() -> iPostService.updatePost(savePost.getId(), postUpdate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
     }
 
@@ -367,7 +368,7 @@ public class PostServiceTest {
         postUpdate.setNoticeYn("N"); //공지사항 게시물 여부
 
         assertThatThrownBy(() -> iPostService.updatePost(-1L, postUpdate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(CommonException.class);
 
     }
 
