@@ -1,5 +1,6 @@
 package com.backend.vroomvroom.service.comment;
 
+import com.backend.vroomvroom.common.exception.CommonException;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
@@ -91,7 +92,7 @@ public class CommentServiceTest {
         //when
         assertThatThrownBy(() ->
             iCommentService.commentRegister(commentRequestDto)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
     }
 
@@ -140,7 +141,7 @@ public class CommentServiceTest {
         //when
         assertThatThrownBy(() ->
                 iCommentService.getCommentAll(-1L)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
 
     }
 
@@ -186,7 +187,7 @@ public class CommentServiceTest {
         //when
         assertThatThrownBy(() ->
                 iCommentService.updateComment(saveComment.getId(), updateRequestDto)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(CommonException.class);
         
 
     }
