@@ -59,3 +59,7 @@ insert into tb_comment (comment_id, crt_dt, crt_user_id, updt_dt, updt_user_id, 
 (3, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), NULL, 'Y', '태스트 댓글 세번째 작성', 1),
 (4, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), NULL, 'Y', '태스트 댓글 첫번째 작성', 2),
 (5, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), NULL, 'Y', '태스트 댓글 두번째 작성', 2);
+
+
+insert into tm_user (user_id, crt_dt, crt_user_id, updt_dt, updt_user_id, use_yn, email, login_id, nickname, password, refresh_token) values
+(1, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, NULL, 'Y', 'test1234@naver.com', 'test1234', '테스트1', '$2a$10$hEcF3Hy1K/M.A78xVGLv2.4R1uI6Va3k6rRH9foQhYpOt7Y8O0v4e', NULL);
