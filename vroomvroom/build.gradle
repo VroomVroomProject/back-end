@@ -35,6 +35,9 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	//mail
+	implementation'org.springframework.boot:spring-boot-starter-mail'
+
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"

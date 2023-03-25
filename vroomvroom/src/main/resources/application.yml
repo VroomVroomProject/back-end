@@ -8,7 +8,7 @@ spring:
   jpa:
     open-in-view: true #OSIV 설정
     hibernate:
-      ddl-auto: update #create
+      ddl-auto: create #create
     properties:
       hibernate:
         diarect: org.hibernate.dialect.MariaDBDialect  # 쿼리의 기준이 되는 데이터베이스 엔진을 설정
@@ -19,6 +19,21 @@ spring:
           import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor # import.sql 테스트 데이터 제거시 같이 제거
     defer-datasource-initialization: true # import.sql 테스트 데이터 제거시 같이 제거
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 springdoc:
   api-docs:
