@@ -1,20 +1,23 @@
 package com.backend.vroomvroom.service.user;
 
 import com.backend.vroomvroom.common.exception.CommonException;
+import com.backend.vroomvroom.dto.user.request.LoginRequestDto;
 import com.backend.vroomvroom.dto.user.request.SignUpRequestDto;
+import com.backend.vroomvroom.dto.user.response.LoginResponseDto;
 import com.backend.vroomvroom.dto.user.response.SignUpResponseDto;
 import com.backend.vroomvroom.entity.user.EmailAuthEntity;
 import com.backend.vroomvroom.repository.user.IEmailAuthRepository;
 import com.backend.vroomvroom.repository.user.IUserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Slf4j
 @SpringBootTest
 @Transactional
 public class UserServiceTest {
@@ -29,7 +32,6 @@ public class UserServiceTest {
     IEmailAuthRepository emailAuthRepository;
 
     @Test
-    @Rollback(value = false)
     public void registerUser_회원가입_성공() {
         //given
         emailAuthRepository.save(EmailAuthEntity.builder()
@@ -245,5 +247,34 @@ public class UserServiceTest {
         //then
         assertThat(ifFalse).isFalse();
         assertThat(ifTrue).isTrue();
+    }
+
+    @Test
+    public void loginUser_로그인_성공() {
+
+        //given
+        emailAuthRepository.save(EmailAuthEntity.builder()
+                .email("test1234@naver.com")
+                .authCode("ABCD12")
+                .build());
+
+        SignUpRequestDto signUpRequest = new SignUpRequestDto();
+        signUpRequest.setLoginId("test1234");
+        signUpRequest.setPassword("qwer1234!");
+        signUpRequest.setAuthCode("ABCD12");
+        signUpRequest.setEmail("test1234@naver.com");
+        signUpRequest.setNickname("테스트1");
+        userRepository.save(SignUpRequestDto.mapToEntity(signUpRequest));
+
+        //when
+        LoginRequestDto loginRequest = new LoginRequestDto();
+        loginRequest.setLoginId("test1234");
+        loginRequest.setPassword("qwer1234!");
+
+        LoginResponseDto loginResponse = userService.loginUser(loginRequest);
+
+        //then
+        assertThat(loginResponse.getAccessToken()).isNotNull();
+        assertThat(loginResponse.getRefreshToken()).isNotNull();
     }
 }

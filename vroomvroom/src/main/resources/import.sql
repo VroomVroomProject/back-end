@@ -62,4 +62,11 @@ insert into tb_comment (comment_id, crt_dt, crt_user_id, updt_dt, updt_user_id, 
 
 
 insert into tm_user (user_id, crt_dt, crt_user_id, updt_dt, updt_user_id, use_yn, email, login_id, nickname, password, refresh_token) values
-(1, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, NULL, 'Y', 'test1234@naver.com', 'test1234', '테스트1', '$2a$10$hEcF3Hy1K/M.A78xVGLv2.4R1uI6Va3k6rRH9foQhYpOt7Y8O0v4e', NULL);
+(1, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, NULL, 'Y', 'test1234@naver.com', 'test1234', '테스트1', '$2a$10$BatyPwoVxRfcpkj7apFHM.xgH.2WRDLyanxmEFQAa.Ae7HNoAFDs.', NULL),
+(2, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, NULL, 'Y', 'admin1234@naver.com', 'admin1234', '관리자1', '$2a$10$WUaBSD2bo9HhRAPLfLeCcOCiP4422h6qj149E5RyyJ1bEKOHvN3DC', NULL);
+
+
+insert into user_entity_roles (user_entity_user_id, roles) values
+(1, 'ROLE_USER'),
+(2, 'ROLE_USER'),
+(2, 'ROLE_ADMIN');

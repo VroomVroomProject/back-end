@@ -1,7 +1,11 @@
 package com.backend.vroomvroom.controller;
 
+import com.backend.vroomvroom.dto.user.request.LoginRequestDto;
 import com.backend.vroomvroom.dto.user.request.SignUpRequestDto;
+import com.backend.vroomvroom.dto.user.request.TokenRequestDto;
+import com.backend.vroomvroom.dto.user.response.LoginResponseDto;
 import com.backend.vroomvroom.dto.user.response.SignUpResponseDto;
+import com.backend.vroomvroom.dto.user.response.TokenResponseDto;
 import com.backend.vroomvroom.service.user.IEmailService;
 import com.backend.vroomvroom.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +45,18 @@ public class UserController {
         return userService.checkLoginIdDuplicate(loginId);
     }
 
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
+    public LoginResponseDto login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+        log.info("로그인 요청 정보, login : {}", loginRequestDto);
 
+        return userService.loginUser(loginRequestDto);
+    }
 
+    @PostMapping("/reissue")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TokenResponseDto reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
+        return userService.reissue(tokenRequestDto);
+    }
 
 }
