@@ -32,5 +32,8 @@ spring:
           timeout: 5000
           writetimeout: 5000
 
+  jwt:
+    secretKey: SDGG43245asffdwpl235321AS3dfko4sdA # 개발단계에서만 사용할 Key, 배포 이전에 수정할 것
+
 logging.level:
   org.hibernate.SQL: debug
