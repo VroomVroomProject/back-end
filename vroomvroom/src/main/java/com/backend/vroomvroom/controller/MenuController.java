@@ -7,6 +7,7 @@ import com.backend.vroomvroom.service.menu.IMenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,10 +28,11 @@ public class MenuController {
      * @throws Exception
      */
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public MenuDto createMenu(@RequestBody @Valid CreateMenuDto createMenuDto) throws Exception {
-        if(StringUtils.isBlank(createMenuDto.getMenuId())) {
-            throw new NullPointerException("메뉴 ID가 빈 값입니다");
-        }
+        log.info("createMenu register, request : {}", createMenuDto);
+        log.info("createMenu register, userId : {}", createMenuDto.getMenuId());
+
         return menuService.createMenu(createMenuDto);
     }
 
@@ -41,10 +43,11 @@ public class MenuController {
      * @throws Exception
      */
     @PatchMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
     public MenuDto updateMenu(@RequestBody @Valid UpdateMenuDto updateMenuDto) throws Exception {
-        if(StringUtils.isBlank(updateMenuDto.getMenuId())) {
-            throw new NullPointerException("메뉴 ID가 빈 값입니다");
-        }
+        log.info("updateMenu register, request : {}", updateMenuDto);
+        log.info("updateMenu register, userId : {}", updateMenuDto.getMenuId());
+
         return menuService.updateMenu(updateMenuDto);
     }
 
@@ -54,10 +57,9 @@ public class MenuController {
      * @return
      */
     @GetMapping("/detail/{menuId}")
+    @ResponseStatus(HttpStatus.OK)
     public MenuDto detailMenu(@PathVariable("menuId") String menuId) {
-        if(StringUtils.isBlank(menuId)) {
-            throw new NullPointerException("메뉴 ID가 빈 값입니다");
-        }
+        log.info("menuDetail register, request : {}", menuId);
         return menuService.getDetailMenu(menuId);
     }
 
@@ -66,7 +68,9 @@ public class MenuController {
      * @return
      */
     @GetMapping("/list")
+    @ResponseStatus(HttpStatus.OK)
     public List<MenuDto> menuList() {
+        log.info("menuList By UseYn register");
         return menuService.list();
     }
 
@@ -75,7 +79,9 @@ public class MenuController {
      * @return
      */
     @GetMapping("/list/all")
+    @ResponseStatus(HttpStatus.OK)
     public List<MenuDto> menuAllList() {
+        log.info("menuList all register");
         return menuService.listAll();
     }
 
@@ -86,10 +92,9 @@ public class MenuController {
      * @throws Exception
      */
     @PatchMapping("/delete/{menuId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Boolean deleteMenu(@PathVariable("menuId") String menuId) throws Exception {
-        if(StringUtils.isBlank(menuId)) {
-            throw new NullPointerException("메뉴 ID가 빈 값입니다");
-        }
+        log.info("deleteMenu register, request : {}", menuId);
         return menuService.deleteMenu(menuId);
     }
 }

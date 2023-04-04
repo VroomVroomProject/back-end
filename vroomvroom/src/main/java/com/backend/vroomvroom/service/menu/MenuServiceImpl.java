@@ -76,6 +76,9 @@ public class MenuServiceImpl implements IMenuService{
 
     @Override
     public MenuDto getDetailMenu(String menuId) {
+        if(StringUtils.isBlank(menuId)) {
+            throw new NullPointerException("menuId is blank");
+        }
         MenuEntity detailMenu = menuRepository.findById(menuId).orElse(null);
         return new MenuDto(detailMenu);
     }
@@ -142,6 +145,9 @@ public class MenuServiceImpl implements IMenuService{
     @Transactional
     @Override
     public boolean deleteMenu(String menuId) {
+        if(StringUtils.isBlank(menuId)) {
+            throw new NullPointerException("menuId is blank");
+        }
         boolean rs = false;
 
         MenuEntity menuEntity = menuRepository.findById(menuId).orElse(null);
