@@ -26,8 +26,6 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
     @Transactional
     public PostCategoryResponseDto createPostCategory(PostCategoryRequestDto postCategoryRequestDto) {
 
-        // TODO: 2023-03-12 생성을 요청하는 userId가 user테이블에 존재하지 않을 경우의 예외처리 하기
-
         this.validatePostCategory(postCategoryRequestDto.getUrlName(), postCategoryRequestDto.getUrl());
 
         PostCategoryEntity postCategoryEntity = PostCategoryRequestDto.mapToEntity(postCategoryRequestDto);
@@ -49,7 +47,6 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
     @Override
     @Transactional
     public Long updatePostCategory(Long postCategoryId, PostCategoryRequestDto postCategoryRequestDto) {
-        // TODO: 2023-03-12 수정을 요청하는 userId가 user테이블에 존재하지 않을 경우의 예외처리 하기
 
         this.validatePostCategory(postCategoryRequestDto.getUrlName(), postCategoryRequestDto.getUrl());
 
@@ -67,7 +64,6 @@ public class PostCategoryServiceImpl implements IPostCategoryService {
     @Override
     @Transactional
     public void deletePostCategory(Long postCategoryId) {
-        // TODO: 2023-03-12 삭제를 요청하는 userId가 user테이블에 존재하지 않을 경우의 예외처리 하기
         PostCategoryEntity findCategoryEntity = iPostCategoryRepository.findById(postCategoryId)
                 .orElseThrow(() -> {
                     log.error("postCategoryId가 존재하지 않습니다. postCategoryId : {}", postCategoryId);

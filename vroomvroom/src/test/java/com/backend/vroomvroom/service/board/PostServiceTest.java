@@ -1,6 +1,7 @@
 package com.backend.vroomvroom.service.board;
 
 import com.backend.vroomvroom.common.exception.CommonException;
+import com.backend.vroomvroom.config.security.user.UserDto;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
@@ -8,8 +9,10 @@ import com.backend.vroomvroom.dto.board.response.PostPageResponse;
 import com.backend.vroomvroom.dto.board.response.PostResponseDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
 import com.backend.vroomvroom.entity.board.PostEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import com.backend.vroomvroom.repository.board.IPostRepository;
+import com.backend.vroomvroom.repository.user.IUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -33,11 +37,15 @@ public class PostServiceTest {
     private IPostRepository iPostRepository;
 
     @Autowired
+    private IUserRepository iUserRepository;
+
+    @Autowired
     private IPostService iPostService;
 
     @Autowired
     private IPostCategoryService iPostCategoryService;
 
+    private UserEntity userEntity;
     private PostCategoryEntity allCategory;
     private PostCategoryEntity questionCategory;
     private PostCategoryEntity noticeCategory;
@@ -47,6 +55,8 @@ public class PostServiceTest {
 
     @BeforeEach
     public void setup() {
+        userEntity = iUserRepository.findByLoginId("test1234").orElse(null);
+
         PostCategoryRequestDto postCategoryRequestDto = new PostCategoryRequestDto();
         postCategoryRequestDto.setViewName("전체");
         postCategoryRequestDto.setUrlName("all");
@@ -82,14 +92,18 @@ public class PostServiceTest {
     public void postRegister_게시물_생성_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
 
+        UserDto user = UserDto.builder()
+                .userId(1L)
+                .loginId("test1234")
+                .build();
+
         //when
-        PostResponseDto result = iPostService.postRegister(postRequestDto);
+        PostResponseDto result = iPostService.postRegister(postRequestDto, user);
 
         //then
         assertThat(result).isNotNull();
@@ -105,14 +119,18 @@ public class PostServiceTest {
     public void postRegister_게시물_생성_실패() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(-1L);
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
 
+        UserDto user = UserDto.builder()
+                .userId(1L)
+                .loginId("test1234")
+                .build();
+
         //when
-        assertThatThrownBy(() -> iPostService.postRegister(postRequestDto))
+        assertThatThrownBy(() -> iPostService.postRegister(postRequestDto, user))
                 .isInstanceOf(CommonException.class);
 
     }
@@ -124,25 +142,24 @@ public class PostServiceTest {
     public void getPostAll_게시물_페이징_조회_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         for(int i = 0; i < 10; i++) {
             postRequestDto.setPostCategoryId(postCategoryAll.getPostCategoryId());
             postRequestDto.setTitle(postCategoryAll.getViewName() + i);
             postRequestDto.setContents(postCategoryAll.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, allCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, allCategory, userEntity));
 
             postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
             postRequestDto.setTitle(postCategoryQuestions.getViewName() + i);
             postRequestDto.setContents(postCategoryQuestions.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
             postRequestDto.setPostCategoryId(postCategoryNotice.getPostCategoryId());
             postRequestDto.setTitle(postCategoryNotice.getViewName() + i);
             postRequestDto.setContents(postCategoryNotice.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("Y"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, noticeCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, noticeCategory, userEntity));
         }
 
         Pageable pageable = PageRequest.of(0, 5);
@@ -175,25 +192,24 @@ public class PostServiceTest {
     public void getPostAll_게시물_페이징_조회_검색조건_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         for(int i = 0; i < 10; i++) {
             postRequestDto.setPostCategoryId(postCategoryAll.getPostCategoryId());
             postRequestDto.setTitle(postCategoryAll.getViewName() + i);
             postRequestDto.setContents(postCategoryAll.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, allCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, allCategory, userEntity));
 
             postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
             postRequestDto.setTitle(postCategoryQuestions.getViewName() + i);
             postRequestDto.setContents(postCategoryQuestions.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
             postRequestDto.setPostCategoryId(postCategoryNotice.getPostCategoryId());
             postRequestDto.setTitle(postCategoryNotice.getViewName() + i);
             postRequestDto.setContents(postCategoryNotice.getViewName() + " 내용 " + i);
             postRequestDto.setNoticeYn("Y"); //공지사항 게시물 여부
-            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, noticeCategory));
+            iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, noticeCategory, userEntity));
         }
 
 
@@ -230,12 +246,11 @@ public class PostServiceTest {
     public void getPostDetail_게시물_상세보기_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         PostResponseDto postDetail = iPostService.getPostDetail(questionCategory.getUrlName(),savePost.getId());
@@ -255,12 +270,11 @@ public class PostServiceTest {
     public void getPostDetail_게시물_상세보기_실패_id() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         assertThatThrownBy(() -> iPostService.getPostDetail(questionCategory.getUrlName(), -1L))
@@ -275,12 +289,11 @@ public class PostServiceTest {
     public void getPostDetail_게시물_상세보기_실패_urlName() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         assertThatThrownBy(() -> iPostService.getPostDetail(questionCategory.getUrlName() + "XXX",  savePost.getId()))
@@ -292,16 +305,14 @@ public class PostServiceTest {
     public void updatePost_게시물_수정_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         PostRequestDto postUpdate = new PostRequestDto();
-        postUpdate.setUserId(1L);
         postUpdate.setPostCategoryId(postCategoryAll.getPostCategoryId());
         postUpdate.setTitle("게시판 제목 수정");
         postUpdate.setContents("게시판 내용 수정했습니다.");
@@ -325,16 +336,14 @@ public class PostServiceTest {
     public void updatePost_게시물_수정_실패_postCategoryId() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         PostRequestDto postUpdate = new PostRequestDto();
-        postUpdate.setUserId(1L);
         postUpdate.setPostCategoryId(-1L); //존재하지 않는 Id
         postUpdate.setTitle("게시판 제목 수정");
         postUpdate.setContents("게시판 내용 수정했습니다.");
@@ -352,16 +361,14 @@ public class PostServiceTest {
     public void updatePost_게시물_수정_실패_postId() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         PostRequestDto postUpdate = new PostRequestDto();
-        postUpdate.setUserId(1L);
         postUpdate.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postUpdate.setTitle("게시판 제목 수정");
         postUpdate.setContents("게시판 내용 수정했습니다.");
@@ -376,12 +383,11 @@ public class PostServiceTest {
     public void deletePost_게시물_삭제_성공() {
         //given
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(postCategoryQuestions.getPostCategoryId());
         postRequestDto.setTitle("게시판 제목1");
         postRequestDto.setContents("게시판 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory));
+        PostEntity savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, questionCategory, userEntity));
 
         //when
         iPostService.deletePost(savePost.getId());

@@ -6,8 +6,10 @@ import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
 import com.backend.vroomvroom.entity.board.PostEntity;
 import com.backend.vroomvroom.entity.comment.CommentEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import com.backend.vroomvroom.repository.board.IPostRepository;
+import com.backend.vroomvroom.repository.user.IUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,17 @@ public class CommentRepositoryTest {
     @Autowired
     private ICommentRepository iCommentRepository;
 
+    @Autowired
+    private IUserRepository iUserRepository;
+
     private PostEntity savePost;
+    private UserEntity userEntity;
 
     @BeforeEach
     @Rollback(value = false)
     public void setup() {
+        userEntity = iUserRepository.findByLoginId("test1234").orElse(null);
+
         PostCategoryRequestDto postCategoryRequestDto = new PostCategoryRequestDto();
         postCategoryRequestDto.setViewName("전체");
         postCategoryRequestDto.setUrlName("all");
@@ -47,12 +55,11 @@ public class CommentRepositoryTest {
         PostCategoryEntity saveCategory = iPostCategoryRepository.save(PostCategoryRequestDto.mapToEntity(postCategoryRequestDto));
 
         PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setUserId(1L);
         postRequestDto.setPostCategoryId(saveCategory.getId());
         postRequestDto.setTitle("게시물 제목1");
         postRequestDto.setContents("게시물 내용입니다.");
         postRequestDto.setNoticeYn("N"); //공지사항 게시물 여부
-        savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, saveCategory));
+        savePost = iPostRepository.save(PostRequestDto.mapToEntity(postRequestDto, saveCategory, userEntity));
     }
 
     @Test

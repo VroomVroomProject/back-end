@@ -2,6 +2,7 @@ package com.backend.vroomvroom.entity.board;
 
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.entity.BaseEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +26,9 @@ public class PostEntity extends BaseEntity {
     @JoinColumn(name = "post_category_id")
     private PostCategoryEntity postCategory;
 
-    // TODO: 2023-03-07 회원기능 추가 후에 작업할 것
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     private String title;
 
@@ -43,10 +43,11 @@ public class PostEntity extends BaseEntity {
     @Column(name = "notice_yn")
     private String noticeYn;
 
-    public PostEntity(Long id, PostCategoryEntity postCategory, String title, String contents, int views, int commentCount, String noticeYn, String useYn) {
+    public PostEntity(Long id, PostCategoryEntity postCategory, UserEntity user, String title, String contents, int views, int commentCount, String noticeYn, String useYn) {
         super(useYn);
         this.id = id;
         this.postCategory = postCategory;
+        this.user = user;
         this.title = title;
         this.contents = contents;
         this.views = views;

@@ -1,5 +1,7 @@
 package com.backend.vroomvroom.controller;
 
+import com.backend.vroomvroom.common.annotation.CurrentUser;
+import com.backend.vroomvroom.config.security.user.UserDto;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostCategoryResponseDto;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,11 +35,11 @@ public class BoardController {
      * @param postCategoryRequestDto
      * @return 생성된 결과 정보를 반환
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/post-category")
     @ResponseStatus(HttpStatus.CREATED)
     public PostCategoryResponseDto createPostCategory(@Valid @RequestBody PostCategoryRequestDto postCategoryRequestDto) {
         log.info("postCategory register, request : {}", postCategoryRequestDto);
-        log.info("postCategory register, userId : {}", postCategoryRequestDto.getUserId());
         
         return postCategoryService.createPostCategory(postCategoryRequestDto);
     }
@@ -53,6 +56,7 @@ public class BoardController {
     /**
      * 게시판 카테고리 수정
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/post-category/{postCategoryId}")
     @ResponseStatus(HttpStatus.OK)
     public Long updatePostCategory(
@@ -66,6 +70,7 @@ public class BoardController {
     /**
      * 게시판 카테고리 삭제
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/post-category/{postCategoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePostCategory(@PathVariable("postCategoryId") Long postCategoryId) {
@@ -78,13 +83,17 @@ public class BoardController {
      * @param postRequestDto
      * @return PostResponseDto 생성된 게시물 정보를 반환
      */
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponseDto postRegister(@Valid @RequestBody PostRequestDto postRequestDto) {
+    public PostResponseDto postRegister(
+            @Valid @RequestBody PostRequestDto postRequestDto,
+            @CurrentUser UserDto user
+            ) {
         log.info("post register, request : {}", postRequestDto);
-        log.info("post register, userId : {}", postRequestDto.getUserId());
+        log.info("post register, userId : {}", user.getUserId());
         
-        return postService.postRegister(postRequestDto);
+        return postService.postRegister(postRequestDto, user);
     }
 
     /**
@@ -117,6 +126,7 @@ public class BoardController {
     /**
      * 게시물 수정
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/post/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Long updatePost(
@@ -130,6 +140,7 @@ public class BoardController {
     /**
      * 게시물 삭제
      */
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/post/{postId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePost(@PathVariable("postId") Long postId) {

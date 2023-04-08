@@ -13,9 +13,6 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class PostCategoryRequestDto {
 
-    @NotNull
-    private Long userId;
-
     @NotBlank
     private String viewName;
 
@@ -42,6 +39,6 @@ public class PostCategoryRequestDto {
                 .adminWriteYn(postCategoryRequestDto.getAdminWriteYn())
                 .url(postCategoryRequestDto.getUrl())
                 .useYn(postCategoryRequestDto.getUseYn())
-                .createUserId(postCategoryRequestDto.getUserId()).build();
+                .build();
     }
 }

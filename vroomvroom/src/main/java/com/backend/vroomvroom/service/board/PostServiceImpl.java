@@ -1,15 +1,18 @@
 package com.backend.vroomvroom.service.board;
 
 import com.backend.vroomvroom.common.exception.CommonException;
+import com.backend.vroomvroom.config.security.user.UserDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.board.response.PostPageResponse;
 import com.backend.vroomvroom.dto.board.response.PostResponseDto;
 import com.backend.vroomvroom.entity.board.PostCategoryEntity;
 import com.backend.vroomvroom.entity.board.PostEntity;
 import com.backend.vroomvroom.entity.board.QPostEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import com.backend.vroomvroom.repository.board.IPostCategoryRepository;
 import com.backend.vroomvroom.repository.board.IPostRepository;
 import com.backend.vroomvroom.repository.comment.ICommentRepository;
+import com.backend.vroomvroom.repository.user.IUserRepository;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +32,11 @@ public class PostServiceImpl implements IPostService {
     private final IPostRepository iPostRepository;
     private final IPostCategoryRepository iPostCategoryRepository;
     private final ICommentRepository iCommentRepository;
+    private final IUserRepository iUserRepository;
 
     @Override
     @Transactional
-    public PostResponseDto postRegister(PostRequestDto postRequestDto) {
-
-        // TODO: 2023-03-08 아래 주석 부분 user 서비스 구현 후에 변경 그리고 테스트 코드 작성할 것 (entity에도 주석 해놓았음)
-//        User findUser = iUserRepository.findById(postRequestDto.getUserId())
-//                .orElseThrow(() -> {
-//                    log.error("user가 존재하지 않습니다. userId : {}", postRequestDto.getUserId());
-//                    throw new RuntimeException("can`t find a user by " + " userId " + postRequestDto.getUserId());
-//                });
+    public PostResponseDto postRegister(PostRequestDto postRequestDto, UserDto user) {
 
         PostCategoryEntity findPostCategory = iPostCategoryRepository.findById(postRequestDto.getPostCategoryId())
                 .orElseThrow(() -> {
@@ -47,7 +44,9 @@ public class PostServiceImpl implements IPostService {
                     throw new CommonException(NOT_FOUND_ENTITY, "게시판 카테고리를 찾을 수 없습니다. id : " + postRequestDto.getPostCategoryId());
                 });
 
-        PostEntity postEntity = PostRequestDto.mapToEntity(postRequestDto, findPostCategory);
+        UserEntity findUser = iUserRepository.findByLoginId(user.getLoginId()).orElse(null);
+
+        PostEntity postEntity = PostRequestDto.mapToEntity(postRequestDto, findPostCategory, findUser);
         PostEntity savedPost = iPostRepository.save(postEntity);
 
         return PostResponseDto.mapToDto(savedPost);
@@ -62,10 +61,10 @@ public class PostServiceImpl implements IPostService {
             log.error("urlName 값과 일치하는 게시판이 존재하지 않습니다. urlName : {}", urlName);
             throw new CommonException(DUPLICATED_ENTITY, "urlName과 일치하는 게시판 카테고리를 찾을 수 없습니다. urlName : " + urlName);
         }
-//        BooleanBuilder booleanBuilder = getPostCondition(urlName);
-        BooleanBuilder booleanBuilder1 = new BooleanBuilder().and(getPostCondition(urlName)).and(getSearchCondition(type, keyword));
 
-        Page<PostResponseDto> postResponseDtoPage = iPostRepository.findAll(booleanBuilder1, pageable).map(PostResponseDto::mapToDto);
+        BooleanBuilder booleanBuilder = new BooleanBuilder().and(getPostCondition(urlName)).and(getSearchCondition(type, keyword));
+
+        Page<PostResponseDto> postResponseDtoPage = iPostRepository.findAll(booleanBuilder, pageable).map(PostResponseDto::mapToDto);
         
         return PostPageResponse.mapToDto(pageable, postResponseDtoPage);
     }
