@@ -32,6 +32,8 @@ public class UserEntity extends BaseEntity {
 
     private String nickname;
 
+    private Long money;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
@@ -39,13 +41,14 @@ public class UserEntity extends BaseEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public UserEntity(Long id, String loginId, String password, String email, String nickname, List<Role> roles, String refreshToken) {
+    public UserEntity(Long id, String loginId, String password, String email, String nickname, Long money, List<Role> roles, String refreshToken) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
-        this.roles = Collections.singletonList(Role.ROLE_USER);
+        this.money = 500000L; //회원가입 시 기본 돈을 50만원으로 세팅한다.
+        this.roles = Collections.singletonList(Role.ROLE_USER); //회원가입 시 기본 권한을 ROLE_USER로 세팅한다.
     }
 
     public void addRole(Role role) {
