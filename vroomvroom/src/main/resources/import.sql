@@ -63,10 +63,10 @@ insert into tb_post (post_id, user_id, crt_dt, crt_user_id, updt_dt, updt_user_i
 (45, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -15 MINUTE), NULL, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -15 MINUTE), NULL, 'Y', 0, '공지사항 내용 15', 'Y', 4, '공지사항15', 0);
 
 
-insert into tb_comment (comment_id, crt_dt, crt_user_id, updt_dt, updt_user_id, use_yn, contents, post_id) values
-(1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), NULL, 'Y', '태스트 댓글 첫번째 작성', 1),
-(2, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), NULL, 'Y', '태스트 댓글 두번째 작성', 1),
-(3, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), NULL, 'Y', '태스트 댓글 세번째 작성', 1),
-(4, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), NULL, 'Y', '태스트 댓글 첫번째 작성', 2),
-(5, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), NULL, 'Y', '태스트 댓글 두번째 작성', 2);
+insert into tb_comment (comment_id, user_id, crt_dt, crt_user_id, updt_dt, updt_user_id, use_yn, contents, post_id) values
+(1, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), NULL, 'Y', '태스트 댓글 첫번째 작성', 1),
+(2, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), NULL, 'Y', '태스트 댓글 두번째 작성', 1),
+(3, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE), NULL, 'Y', '태스트 댓글 세번째 작성', 1),
+(4, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -3 MINUTE), NULL, 'Y', '태스트 댓글 첫번째 작성', 2),
+(5, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE), NULL, 'Y', '태스트 댓글 두번째 작성', 2);
 

@@ -3,6 +3,7 @@ package com.backend.vroomvroom.entity.comment;
 import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
 import com.backend.vroomvroom.entity.BaseEntity;
 import com.backend.vroomvroom.entity.board.PostEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,18 +27,18 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "post_id")
     private PostEntity post;
 
-    // TODO: 2023-03-07 회원기능 추가 후에 작업할 것
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @Lob
     private String contents;
 
-    public CommentEntity(Long id, PostEntity post, String contents, String useYn) {
+    public CommentEntity(Long id, PostEntity post, UserEntity user, String contents, String useYn) {
         super(useYn);
         this.id = id;
         this.post = post;
+        this.user = user;
         this.contents = contents;
     }
 

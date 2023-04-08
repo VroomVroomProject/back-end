@@ -2,6 +2,7 @@ package com.backend.vroomvroom.dto.comment.request;
 
 import com.backend.vroomvroom.entity.comment.CommentEntity;
 import com.backend.vroomvroom.entity.board.PostEntity;
+import com.backend.vroomvroom.entity.user.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,19 +16,17 @@ import javax.validation.constraints.NotNull;
 public class CommentRequestDto {
 
     @NotNull
-    private Long userId;
-
-    @NotNull
     private Long postId;
 
     @NotBlank
     private String contents;
 
-    public static CommentEntity mapToEntity(CommentRequestDto commentRequestDto, PostEntity postEntity /**User user**/) {
+    public static CommentEntity mapToEntity(CommentRequestDto commentRequestDto, PostEntity postEntity, UserEntity userEntity) {
         return CommentEntity.builder()
                 .post(postEntity)
+                .user(userEntity)
                 .contents(commentRequestDto.getContents())
-                .createUserId(commentRequestDto.getUserId())
+                .createUserId(userEntity.getId())
                 .useYn("Y")
                 .build();
     }

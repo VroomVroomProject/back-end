@@ -1,6 +1,7 @@
 package com.backend.vroomvroom.service.comment;
 
 import com.backend.vroomvroom.common.exception.CommonException;
+import com.backend.vroomvroom.config.security.user.UserDto;
 import com.backend.vroomvroom.dto.board.request.PostCategoryRequestDto;
 import com.backend.vroomvroom.dto.board.request.PostRequestDto;
 import com.backend.vroomvroom.dto.comment.request.CommentRequestDto;
@@ -74,12 +75,17 @@ public class CommentServiceTest {
     public void commentRegister_댓글_등록_성공() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
 
+        UserDto userDto = UserDto.builder()
+                .userId(1L)
+                .loginId("test1234")
+                .nickName("테스트1")
+                .build();
+
         //when
-        CommentResponseDto saveComment = iCommentService.commentRegister(commentRequestDto);
+        CommentResponseDto saveComment = iCommentService.commentRegister(commentRequestDto, userDto);
 
         //then
         assertThat(commentRequestDto.getContents()).isEqualTo(saveComment.getContents());
@@ -93,13 +99,19 @@ public class CommentServiceTest {
     public void commentRegister_댓글_등록_실패() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(-1L); //존재하지 않는 게시물 아이디
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
 
+        UserDto userDto = UserDto.builder()
+                .userId(1L)
+                .loginId("test1234")
+                .nickName("테스트1")
+                .build();
+
+
         //when
         assertThatThrownBy(() ->
-            iCommentService.commentRegister(commentRequestDto)
+            iCommentService.commentRegister(commentRequestDto, userDto)
         ).isInstanceOf(CommonException.class);
 
     }
@@ -109,22 +121,19 @@ public class CommentServiceTest {
     public void getCommentAll_댓글_리스트_가져오기_성공() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
 
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다2222");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
 
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다3333");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         //when
         List<CommentResponseDto> commentList = iCommentService.getCommentAll(savePost.getId());
@@ -141,10 +150,9 @@ public class CommentServiceTest {
     public void getCommentAll_댓글_리스트_가져오기_실패() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         //when
         assertThatThrownBy(() ->
@@ -157,13 +165,11 @@ public class CommentServiceTest {
     public void updateComment_댓글_수정_성공() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
-        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         CommentRequestDto updateRequestDto = new CommentRequestDto();
-        updateRequestDto.setUserId(1L);
         updateRequestDto.setPostId(savePost.getId());
         updateRequestDto.setContents("수정된 댓글입니다.");
 
@@ -182,13 +188,11 @@ public class CommentServiceTest {
     public void updateComment_댓글_수정_실패() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
-        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         CommentRequestDto updateRequestDto = new CommentRequestDto();
-        updateRequestDto.setUserId(1L);
         updateRequestDto.setPostId(-1L); //다른 게시물 아이디
         updateRequestDto.setContents("수정된 댓글입니다.");
 
@@ -204,10 +208,9 @@ public class CommentServiceTest {
     public void deleteComment_댓글_삭제_성공() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
-        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        CommentEntity saveComment = iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         //when
         iCommentService.deleteComment(saveComment.getId());

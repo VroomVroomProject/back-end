@@ -66,25 +66,22 @@ public class CommentRepositoryTest {
     public void findByPostEntityAndUseYnOrderByCreateDateTime_테스트() throws InterruptedException {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
 
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         Thread.sleep(1000);
 
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다2222");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         Thread.sleep(1000);
-
-        commentRequestDto.setUserId(1L);
+        ;
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다3333");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         //when
         List<CommentEntity> commentList = iCommentRepository.findByPostAndUseYnOrderByCreateDateTime(savePost, "Y");
@@ -98,21 +95,18 @@ public class CommentRepositoryTest {
     public void bulkUseYnSetting_댓글_일괄_삭제_테스트() {
         //given
         CommentRequestDto commentRequestDto = new CommentRequestDto();
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다. 댓글 입니다.");
 
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다2222");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
-        commentRequestDto.setUserId(1L);
         commentRequestDto.setPostId(savePost.getId());
         commentRequestDto.setContents("댓글 입니다3333");
-        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost));
+        iCommentRepository.save(CommentRequestDto.mapToEntity(commentRequestDto, savePost, userEntity));
 
         //when
         int bulkCount = iCommentRepository.bulkUseYnSetting("N", savePost.getId());
