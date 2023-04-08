@@ -17,6 +17,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        throw new CommonException(ROLE_NOT_EXISTS, "해당 계정은 권한이 없습니다. 테스트");
+        throw new CommonException(ROLE_NOT_EXISTS, "해당 계정은 권한이 없습니다.");
     }
 }

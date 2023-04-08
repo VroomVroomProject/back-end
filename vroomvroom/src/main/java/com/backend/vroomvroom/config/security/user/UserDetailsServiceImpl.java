@@ -31,9 +31,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     throw new CommonException(ErrorCode.NOT_FOUND_ENTITY, "존재하지 않는 사용자입니다.");
                 });
 
-        return UserDetailsImpl.builder()
+        UserDto userDto = UserDto.builder()
+                .userId(findUser.getId())
                 .loginId(findUser.getLoginId())
                 .password(findUser.getPassword())
+                .email(findUser.getEmail())
+                .nickName(findUser.getNickname())
+                .money(findUser.getMoney())
+                .build();
+
+        return UserInfo.builder()
+                .authUser(userDto)
                 .authorities(findUser.getRoles().stream()
                         .map(auth -> new SimpleGrantedAuthority(auth.toString()))
                         .collect(Collectors.toList())

@@ -17,6 +17,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        throw new CommonException(UNAUTHORIZED, "로그인이 필요한 서비스입니다. 테스트");
+        throw new CommonException(UNAUTHORIZED, "로그인이 필요한 서비스입니다.");
     }
 }

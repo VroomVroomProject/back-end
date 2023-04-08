@@ -1,22 +1,22 @@
 package com.backend.vroomvroom.config.security.user;
 
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-public class UserDetailsImpl implements UserDetails {
+@Getter
+public class UserInfo implements UserDetails {
 
-    private String loginId;
-    private String password;
+    private UserDto authUser;
     private List<GrantedAuthority> authorities;
 
     @Builder
-    public UserDetailsImpl(String loginId, String password, List<GrantedAuthority> authorities) {
-        this.loginId = loginId;
-        this.password = password;
+    public UserInfo(UserDto authUser, List<GrantedAuthority> authorities) {
+        this.authUser = authUser;
         this.authorities = authorities;
     }
 
@@ -27,12 +27,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return authUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return loginId;
+        return authUser.getLoginId();
     }
 
     @Override
